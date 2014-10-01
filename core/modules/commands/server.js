@@ -50,10 +50,22 @@ SimpleServer.prototype.addRoute = function(route) {
 };
 
 SimpleServer.prototype.findMatchingRoute = function(request,state) {
+	var pathprefix = this.get("pathprefix") || "";
 	for(var t=0; t<this.routes.length; t++) {
 		var potentialRoute = this.routes[t],
 			pathRegExp = potentialRoute.path,
-			match = potentialRoute.path.exec(state.urlInfo.pathname);
+			pathname = state.urlInfo.pathname,
+			match;
+		if(pathprefix) {
+			if(pathname.substr(0,pathprefix.length) === pathprefix) {
+				pathname = pathname.substr(pathprefix.length);
+				match = potentialRoute.path.exec(pathname);
+			} else {
+				match = false;
+			}
+		} else {
+			match = potentialRoute.path.exec(pathname);
+		}
 		if(match && request.method === potentialRoute.method) {
 			state.params = [];
 			for(var p=1; p<match.length; p++) {
@@ -66,7 +78,7 @@ SimpleServer.prototype.findMatchingRoute = function(request,state) {
 };
 
 SimpleServer.prototype.checkCredentials = function(request,incomingUsername,incomingPassword) {
-	var header = request.headers["authorization"] || "",
+	var header = request.headers.authorization || "",
 		token = header.split(/\s+/).pop() || "",
 		auth = $tw.utils.base64Decode(token),
 		parts = auth.split(/:/),
@@ -77,7 +89,7 @@ SimpleServer.prototype.checkCredentials = function(request,incomingUsername,inco
 	} else {
 		return "DENIED";
 	}
-}
+};
 
 SimpleServer.prototype.listen = function(port,host) {
 	var self = this;
@@ -155,8 +167,8 @@ var Command = function(params,commander,callback) {
 				delete fields.fields;
 			}
 			// Remove any revision field
-			if(fields["revision"]) {
-				delete fields["revision"];
+			if(fields.revision) {
+				delete fields.revision;
 			}
 			state.wiki.addTiddler(new $tw.Tiddler(state.wiki.getCreationFields(),fields,{title: title}));
 			var changeCount = state.wiki.getChangeCount(title).toString();
@@ -225,7 +237,7 @@ var Command = function(params,commander,callback) {
 						tiddlerFields[name] = tiddler.getFieldString(name);
 					}
 				});
-				tiddlerFields["revision"] = state.wiki.getChangeCount(title);
+				tiddlerFields.revision = state.wiki.getChangeCount(title);
 				tiddlerFields.type = tiddlerFields.type || "text/vnd.tiddlywiki";
 				tiddlers.push(tiddlerFields);
 			});
@@ -253,7 +265,7 @@ var Command = function(params,commander,callback) {
 						tiddlerFields.fields[name] = value;
 					}
 				});
-				tiddlerFields["revision"] = state.wiki.getChangeCount(title);
+				tiddlerFields.revision = state.wiki.getChangeCount(title);
 				tiddlerFields.type = tiddlerFields.type || "text/vnd.tiddlywiki";
 				response.writeHead(200, {"Content-Type": "application/json"});
 				response.end(JSON.stringify(tiddlerFields),"utf8");
@@ -272,13 +284,15 @@ Command.prototype.execute = function() {
 		serveType = this.params[3] || "text/html",
 		username = this.params[4],
 		password = this.params[5],
-		host = this.params[6] || "127.0.0.1";
+		host = this.params[6] || "127.0.0.1",
+		pathprefix = this.params[7];
 	this.server.set({
 		rootTiddler: rootTiddler,
 		renderType: renderType,
 		serveType: serveType,
 		username: username,
-		password: password
+		password: password,
+		pathprefix: pathprefix
 	});
 	this.server.listen(port,host);
 	console.log("Serving on " + host + ":" + port);

@@ -1,8 +1,9 @@
 created: 20131205160746466
-modified: 20140409133148420
-tags: wikitext
+modified: 20140619111725471
+tags: WikiText
 title: Macros in WikiText
 type: text/vnd.tiddlywiki
+caption: Macros
 
 ! Defining Macros
 
@@ -26,6 +27,10 @@ Single-line macros can omit the `\end` marker like this:
 
 Macro definitions must be placed at the top of a tiddler. Macros are available to the tiddler that defines them, plus any tiddlers that it transcludes.
 
+Global macros can be defined in any tiddler with the tag [[$:/tags/Macro]]. They are then available within all tiddlers.
+
+Macros can be imported from other tiddlers with the ImportVariablesWidget.
+
 [[JavaScript Macros]] can also be used for more flexibility.
 
 ! Using Macros
@@ -45,4 +50,24 @@ Hi I'm Bugs Bunny and I live in Rabbit Hole Hill
 Hi I'm Donald Duck and I live in Rabbit Hole Hill
 Hi I'm Mickey Mouse and I live in Mouse House
 
+```
+
+! Multiline Parameters
+
+Parameters can include line breaks. For example:
+
+```
+<<mysamplemacro "Mickey Mouse" "Mouse House,
+Mouse Lane,
+Rodentville,
+Ratland.">>
+```
+
+By using triple-double quotes you can specify parameter values that include single double quotes. For example:
+
+```
+<<mysamplemacro "Mickey Mouse" """Mouse House,
+"Mouse" Lane,
+Rodentville,
+Ratland.""">>
 ```

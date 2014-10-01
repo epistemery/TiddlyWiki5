@@ -156,3 +156,19 @@ Tomohiro Miura, @pekopeko1, 2014/04/15
 Devin Weaver, @sukima, 2014/05/21
 
 Irene Knapp, @IreneKnapp, 2014/05/17
+
+Daniel Rodriguez Rivero, @danielo515, 2014/04/18
+
+Jonathan Lister, @jayfresh, 2014/06/23
+
+Stephan Sokolow, @ssokolow, 2014/07/15
+
+Dave Gifford, @giffmex, 2014/09/05
+
+Eucaly J, @Eucaly, 2014/09/14
+
+Mal Gamble, @malgam, 2014/09/19
+
+Ton Gerner, @gernert, 2014/09/19
+
+Julie Bertrand, @Evolena, 2014/09/22

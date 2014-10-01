@@ -46,9 +46,15 @@ ButtonWidget.prototype.render = function(parent,nextSibling) {
 		}
 	}
 	domNode.className = classes.join(" ");
-	// Assign classes
+	// Assign other attributes
 	if(this.style) {
 		domNode.setAttribute("style",this.style);
+	}
+	if(this.tooltip) {
+		domNode.setAttribute("title",this.tooltip);
+	}
+	if(this["aria-label"]) {
+		domNode.setAttribute("aria-label",this["aria-label"]);
 	}
 	// Add a click event handler
 	domNode.addEventListener("click",function (event) {
@@ -95,7 +101,7 @@ ButtonWidget.prototype.isPoppedUp = function() {
 ButtonWidget.prototype.navigateTo = function(event) {
 	var bounds = this.domNodes[0].getBoundingClientRect();
 	this.dispatchEvent({
-		type: "tw-navigate",
+		type: "tm-navigate",
 		navigateTo: this.to,
 		navigateFromTitle: this.getVariable("storyTiddler"),
 		navigateFromNode: this,
@@ -134,6 +140,8 @@ ButtonWidget.prototype.execute = function() {
 	this.popup = this.getAttribute("popup");
 	this.hover = this.getAttribute("hover");
 	this["class"] = this.getAttribute("class","");
+	this["aria-label"] = this.getAttribute("aria-label");
+	this.tooltip = this.getAttribute("tooltip");
 	this.style = this.getAttribute("style");
 	this.selectedClass = this.getAttribute("selectedClass");
 	this.defaultSetValue = this.getAttribute("default");
